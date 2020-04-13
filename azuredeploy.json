@@ -154,5 +154,33 @@
       "type": "string",
       "value": "[variables('adminUsername')]"
     }
-  }
+  },
+      {
+      "name": "[variables('raoufstorage101Name')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-01-01",
+      "sku": {
+        "name": "[parameters('raoufstorage101Type')]"
+      },
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "raoufstorage101"
+      },
+      "kind": "Storage"
+    },
+    {
+      "name": "[variables('raoufstorage101Name')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-01-01",
+      "sku": {
+        "name": "[parameters('raoufstorage101Type')]"
+      },
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "raoufstorage101"
+      },
+      "kind": "Storage"
+    }
 }
