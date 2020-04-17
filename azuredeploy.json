@@ -47,23 +47,23 @@
     "vnetSubnet2Prefix": "10.0.1.0/24",
     "vnetSubnet2Name": "Subnet-3000",
     "vnetSubnet2Prefix": "10.0.2.0/24",
-    "vnetSubnet2Name": "Subnet-4000",
-    "vnetSubnet2Prefix": "10.0.4.0/24",
-    "vnetSubnet2Name": "Subnet-1000",
-    "vnetSubnet2Prefix": "10.10.4.0/24",
+    "vnetSubnet3Name": "Subnet-4000",
+    "vnetSubnet3Prefix": "10.0.4.0/24",
+    "vnetSubnet4Name": "Subnet-1000",
+    "vnetSubnet4Prefix": "10.10.4.0/24",
     "rmstgdevName": "[concat('rmstgdev', uniqueString(resourceGroup().id))]",
     "rmwebapp101Name": "[concat('rmwebapp101', uniqueString(resourceGroup().id))]",
     "rmwebappserviceplName": "[concat(variables('rmstgdevName'), '-vnet')]"
   },
   "resources": [
     {
-      "name": "vnet",
+      "name": "Virtualnet",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
       "dependsOn": [],
       "tags": {
-        "displayName": "vnet"
+        "displayName": "Virtualnet"
       },
       "properties": {
         "addressSpace": {
@@ -82,6 +82,18 @@
             "name": "[variables('vnetSubnet2Name')]",
             "properties": {
               "addressPrefix": "[variables('vnetSubnet2Prefix')]"
+            }
+          },
+           {
+            "name": "[variables('vnetSubnet3Name')]",
+            "properties": {
+              "addressPrefix": "[variables('vnetSubnet3Prefix')]"
+            }
+          },
+           {
+            "name": "[variables('vnetSubnet4Name')]",
+            "properties": {
+              "addressPrefix": "[variables('vnetSubnet4Prefix')]"
             }
           }
         ]
