@@ -45,7 +45,7 @@
     "vnetSubnet1Prefix": "10.0.0.0/24",
     "vnetSubnet2Name": "Subnet-2",
     "vnetSubnet2Prefix": "10.0.1.0/24",
-    "vnetSubnet2Name": "Subnet-3",
+    "vnetSubnet2Name": "Subnet-3000",
     "vnetSubnet2Prefix": "10.0.2.0/24",
     "vnetSubnet2Name": "Subnet-4",
     "vnetSubnet2Prefix": "10.0.4.0/24",
