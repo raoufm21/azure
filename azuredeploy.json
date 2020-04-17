@@ -47,7 +47,7 @@
     "vnetSubnet2Prefix": "10.0.1.0/24",
     "vnetSubnet2Name": "Subnet-3000",
     "vnetSubnet2Prefix": "10.0.2.0/24",
-    "vnetSubnet2Name": "Subnet-4",
+    "vnetSubnet2Name": "Subnet-4000",
     "vnetSubnet2Prefix": "10.0.4.0/24",
     "rmstgdevName": "[concat('rmstgdev', uniqueString(resourceGroup().id))]",
     "rmwebapp101Name": "[concat('rmwebapp101', uniqueString(resourceGroup().id))]",
