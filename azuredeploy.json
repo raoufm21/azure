@@ -1,186 +1,138 @@
 {
-  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "location": {
-      "type": "string"
+    "rmstgdevType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
     },
-    "networkInterfaceName": {
-      "type": "string"
+    "rmwebappserviceplName": {
+      "type": "string",
+      "minLength": 1
     },
-    "networkSecurityGroupName": {
-      "type": "string"
-    },
-    "networkSecurityGroupRules": {
-      "type": "array"
-    },
-
-    "subnets": {
-      "type": "array"
+    "rmwebappserviceplSkuName": {
+      "type": "string",
+      "defaultValue": "F1",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "metadata": {
+        "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
+      }
     }
-
   },
   "variables": {
-
-    "publicIpAddressName": "vm1-ip",
-    "publicIpAddressType": "Dynamic",
-    "publicIpAddressSku": "Basic",
-    "virtualMachineName": "vm1",
-    "virtualMachineRG": "autoacc",
-    "osDiskType": "Premium_LRS",
-    "virtualMachineSize": "Standard_DS1_v2",
-    "adminUsername": "rm",
-    "adminPassword": "Passcode101!",
-    "subnetName": "default",
-    "virtualNetworkName": "autoacc-vnet",
-    "addressPrefixes": [ "10.0.0.0/24" ],
-
-
-    "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
-    "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
-    "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnetName'))]"
+    "vnetPrefix": "10.0.0.0/16",
+    "vnetSubnet1Name": "Subnet-1",
+    "vnetSubnet1Prefix": "10.0.0.0/24",
+    "vnetSubnet2Name": "Subnet-2",
+    "vnetSubnet2Prefix": "10.0.1.0/24",
+    "vnetSubnet2Name": "Subnet-3",
+    "vnetSubnet2Prefix": "10.0.2.0/24",
+    "vnetSubnet2Name": "Subnet-4",
+    "vnetSubnet2Prefix": "10.0.4.0/24",
+    "rmstgdevName": "[concat('rmstgdev', uniqueString(resourceGroup().id))]",
+    "rmwebapp101Name": "[concat('rmwebapp101', uniqueString(resourceGroup().id))]",
+    "rmwebappserviceplName": "[concat(variables('rmstgdevName'), '-vnet')]"
   },
   "resources": [
     {
-      "name": "[parameters('networkInterfaceName')]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "apiVersion": "2019-07-01",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
-        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Network/publicIpAddresses/', variables('publicIpAddressName'))]"
-      ],
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "subnet": {
-                "id": "[variables('subnetRef')]"
-              },
-              "privateIPAllocationMethod": "Dynamic",
-              "publicIpAddress": {
-                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', variables('publicIpAddressName'))]"
-              }
-            }
-          }
-        ],
-        "networkSecurityGroup": {
-          "id": "[variables('nsgId')]"
-        }
-      }
-    },
-    {
-      "name": "[parameters('networkSecurityGroupName')]",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2019-02-01",
-      "location": "[parameters('location')]",
-      "properties": {
-        "securityRules": "[parameters('networkSecurityGroupRules')]"
-      }
-    },
-    {
-      "name": "[variables('virtualNetworkName')]",
+      "name": "vnet",
       "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2019-09-01",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "vnet"
+      },
       "properties": {
         "addressSpace": {
-          "addressPrefixes": "[variables('addressPrefixes')]"
-        },
-        "subnets": "[parameters('subnets')]"
-      }
-    },
-    {
-      "name": "[variables('publicIpAddressName')]",
-      "type": "Microsoft.Network/publicIpAddresses",
-      "apiVersion": "2019-02-01",
-      "location": "[parameters('location')]",
-      "properties": {
-        "publicIpAllocationMethod": "[variables('publicIpAddressType')]"
-      },
-      "sku": {
-        "name": "[variables('publicIpAddressSku')]"
-      }
-    },
-    {
-      "name": "[variables('virtualMachineName')]",
-      "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2019-07-01",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]"
-      ],
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "[variables('virtualMachineSize')]"
-        },
-        "storageProfile": {
-          "osDisk": {
-            "createOption": "fromImage",
-            "managedDisk": {
-              "storageAccountType": "[variables('osDiskType')]"
-            }
-          },
-          "imageReference": {
-            "publisher": "MicrosoftWindowsServer",
-            "offer": "WindowsServer",
-            "sku": "2019-Datacenter",
-            "version": "latest"
-          }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]"
-            }
+          "addressPrefixes": [
+            "[variables('vnetPrefix')]"
           ]
         },
-        "osProfile": {
-          "computerName": "[variables('virtualMachineName')]",
-          "adminUsername": "[variables('adminUsername')]",
-          "adminPassword": "[variables('adminPassword')]",
-          "windowsConfiguration": {
-            "enableAutomaticUpdates": true,
-            "provisionVmAgent": true
+        "subnets": [
+          {
+            "name": "[variables('vnetSubnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('vnetSubnet1Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('vnetSubnet2Name')]",
+            "properties": {
+              "addressPrefix": "[variables('vnetSubnet2Prefix')]"
+            }
           }
-        }
+        ]
+      }
+    },
+    {
+      "name": "[variables('rmstgdevName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-01-01",
+      "sku": {
+        "name": "[parameters('rmstgdevType')]"
+      },
+      "dependsOn": [],
+      "tags": {
+        "displayName": "rmstgdev"
+      },
+      "kind": "Storage"
+    },
+    {
+      "name": "[parameters('rmwebappserviceplName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "sku": {
+        "name": "[parameters('rmwebappserviceplSkuName')]"
+      },
+      "dependsOn": [],
+      "tags": {
+        "displayName": "rmwebappservicepl"
+      },
+      "properties": {
+        "name": "[parameters('rmwebappserviceplName')]",
+        "numberOfWorkers": 1
+      }
+    },
+    {
+      "name": "[variables('rmwebapp101Name')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('rmwebappserviceplName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('rmwebappserviceplName')))]": "Resource",
+        "displayName": "rmwebapp101"
+      },
+      "properties": {
+        "name": "[variables('rmwebapp101Name')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('rmwebappserviceplName'))]"
       }
     }
   ],
-  "outputs": {
-    "adminUsername": {
-      "type": "string",
-      "value": "[variables('adminUsername')]"
-    }
-  },
-      {
-      "name": "[variables('raoufstorage101Name')]",
-      "type": "Microsoft.Storage/storageAccounts",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2016-01-01",
-      "sku": {
-        "name": "[parameters('raoufstorage101Type')]"
-      },
-      "dependsOn": [ ],
-      "tags": {
-        "displayName": "raoufstorage101"
-      },
-      "kind": "Storage"
-    },
-    {
-      "name": "[variables('raoufstorage101Name')]",
-      "type": "Microsoft.Storage/storageAccounts",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2016-01-01",
-      "sku": {
-        "name": "[parameters('raoufstorage101Type')]"
-      },
-      "dependsOn": [ ],
-      "tags": {
-        "displayName": "raoufstorage101"
-      },
-      "kind": "Storage"
-    }
+  "outputs": {}
 }

@@ -2,41 +2,9 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "location": {
-      "value": "northeurope"
-    },
-    "networkInterfaceName": {
-      "value": "vm1488"
-    },
-    "networkSecurityGroupName": {
-      "value": "vm1-nsg"
-    },
-    "networkSecurityGroupRules": {
-      "value": [
-        {
-          "name": "RDP",
-          "properties": {
-            "priority": 400,
-            "protocol": "TCP",
-            "access": "Allow",
-            "direction": "Inbound",
-            "sourceAddressPrefix": "*",
-            "sourcePortRange": "*",
-            "destinationAddressPrefix": "*",
-            "destinationPortRange": "3389"
-          }
-        }
-      ]
-    },
-    "subnets": {
-      "value": [
-        {
-          "name": "default",
-          "properties": {
-            "addressPrefix": "10.0.0.0/24"
-          }
-        }
-      ]
+    "rmwebappserviceplName": {
+      "value": "gtr"
     }
+
   }
 }
