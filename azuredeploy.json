@@ -43,10 +43,8 @@
     "vnetPrefix": "10.0.0.0/16",
     "vnetSubnet1Name": "Default-Subnet-1",
     "vnetSubnet1Prefix": "10.0.0.0/24",
-    "vnetSubnet2Name": "Subnet-2",
+    "vnetSubnet2Name": "Subnet-2000",
     "vnetSubnet2Prefix": "10.0.1.0/24",
-    "vnetSubnet3Name": "Subnet-3000",
-    "vnetSubnet3Prefix": "10.0.2.0/24",
     "rmstgdevName": "[concat('rmstgdev', uniqueString(resourceGroup().id))]",
     "rmwebapp101Name": "[concat('rmwebapp101', uniqueString(resourceGroup().id))]",
     "rmwebappserviceplName": "[concat(variables('rmstgdevName'), '-vnet')]"
@@ -79,19 +77,7 @@
             "properties": {
               "addressPrefix": "[variables('vnetSubnet2Prefix')]"
             }
-          },
-           {
-            "name": "[variables('vnetSubnet3Name')]",
-            "properties": {
-              "addressPrefix": "[variables('vnetSubnet3Prefix')]"
-            }
-          },
-           {
-            "name": "[variables('vnetSubnet4Name')]",
-            "properties": {
-              "addressPrefix": "[variables('vnetSubnet4Prefix')]"
-            }
-          }
+          }               
         ]
       }
     },
