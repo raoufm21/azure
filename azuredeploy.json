@@ -41,7 +41,7 @@
   },
   "variables": {
     "vnetPrefix": "10.0.0.0/16",
-    "vnetSubnet1Name": "Subnet-1",
+    "vnetSubnet1Name": "Default-Subnet-1",
     "vnetSubnet1Prefix": "10.0.0.0/24",
     "vnetSubnet2Name": "Subnet-2",
     "vnetSubnet2Prefix": "10.0.1.0/24",
